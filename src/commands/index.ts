@@ -1,0 +1,95 @@
+import * as vscode from 'vscode';
+import { GatewayProvider } from '../provider/gatewayProvider';
+import { StatusBarManager } from '../status/statusBarManager';
+import { configureServerFlow } from './configureServer';
+import { editCustomHeadersFlow } from './customHeaders';
+import { getProductName } from '../branding';
+
+/**
+ * Register every user-facing command the extension contributes. Kept out of
+ * `extension.ts` so activation stays a thin wiring layer; the interactive
+ * flows themselves live in `configureServer.ts` / `customHeaders.ts`.
+ */
+export function registerCommands(
+  context: vscode.ExtensionContext,
+  provider: GatewayProvider,
+  statusManager: StatusBarManager,
+  refreshStatusBar: () => Promise<void>
+): void {
+  context.subscriptions.push(
+    // Tooltip's "Show output log" link needs a registered command (command-link
+    // anchors can't call class methods directly). Tiny wrapper around
+    // provider.showOutput.
+    vscode.commands.registerCommand('zombiecoder.mission-barisal.showOutput', () =>
+      provider.showOutput()
+    ),
+
+    vscode.commands.registerCommand(
+      'zombiecoder.mission-barisal.testConnection',
+      async () => {
+        const cts = new vscode.CancellationTokenSource();
+        try {
+          const models = await provider.provideLanguageModelChatInformation(
+            { silent: false },
+            cts.token
+          );
+
+          if (models.length > 0) {
+            statusManager.setIdle(models.map((m) => m.id));
+            vscode.window.showInformationMessage(
+              `${getProductName()}: Successfully connected! Found ${models.length} model(s): ${models.map((m) => m.name).join(', ')}`
+            );
+          } else {
+            statusManager.setNoModels();
+            vscode.window.showWarningMessage(
+              `${getProductName()}: Connected but no models found.`
+            );
+          }
+        } catch (error) {
+          statusManager.setError(error instanceof Error ? error.message : String(error));
+          vscode.window.showErrorMessage(
+            `${getProductName()}: Connection test failed. ${error instanceof Error ? error.message : String(error)}`
+          );
+        } finally {
+          cts.dispose();
+        }
+      }
+    ),
+
+    // "Configure Server" command — triggered by the "Add Models..." dropdown
+    // via the managementCommand contribution.
+    vscode.commands.registerCommand('zombiecoder.mission-barisal.manage', () =>
+      configureServerFlow(provider, refreshStatusBar)
+    ),
+
+    // "Edit Custom Headers" command — lets users manage additional HTTP
+    // headers (e.g. `Authorization: Token …`, `Anthropic-Version`) without
+    // touching settings.json. Values are persisted via SecretStorage because
+    // these headers commonly carry credentials (issue #28).
+    vscode.commands.registerCommand(
+      'zombiecoder.mission-barisal.editCustomHeaders',
+      async () => {
+        await editCustomHeadersFlow(provider);
+        provider.invalidateModelCache();
+        provider.refreshModels();
+        await refreshStatusBar();
+      }
+    ),
+
+    // Explicit "Refresh Models" command — previously users could only trigger
+    // a re-fetch by editing settings, which was confusing when models
+    // temporarily went missing.
+    vscode.commands.registerCommand(
+      'zombiecoder.mission-barisal.refreshModels',
+      async () => {
+        // Invalidate the provider's cache so the next fetch is fresh, then
+        // fire the change event (VS Code will re-call
+        // provideLanguageModelChatInformation on its own schedule) and
+        // update the status bar immediately.
+        provider.invalidateModelCache();
+        provider.refreshModels();
+        await refreshStatusBar();
+      }
+    )
+  );
+}
