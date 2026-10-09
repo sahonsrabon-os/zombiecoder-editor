@@ -251,8 +251,8 @@ ANTIDOTE_ENABLED · MAX_TOOL_ROUNDS` — সম্পূর্ণ তালি�
 ## 🔗 ৪. রিমোট রিপোজিটরি (push করা হয়েছে ✅)
 | ফোল্ডার | রিমোট | main commit |
 |---|---|---|
-| `zombiecoder-editor` | `https://github.com/sahonsrabon-os/zombiecoder-editor.git` | `0124b0a` (136 ফাইল, TypeScript) |
-| `zombiecoder-server` | `https://github.com/sahonsrabon-os/zombie-bazaar.git` | `6b41df5` (57 ফাইল, JavaScript) |
+| `zombiecoder-editor` | `https://github.com/sahonsrabon-os/zombiecoder-editor.git` | ✅ pushed, HEAD `6d031f7` (136 ফাইল, TypeScript) |
+| `zombiecoder-server` | `https://github.com/sahonsrabon-os/zombie-bazaar.git` | ✅ pushed, HEAD `f93bf10` (57 ফাইল, JavaScript) |
 
 ---
 
