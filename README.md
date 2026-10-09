@@ -4,6 +4,9 @@
 ![License](https://img.shields.io/badge/license-Proprietary--Local%20Freedom%20Protocol-10b981)
 ![Platform](https://img.shields.io/badge/platform-VS%20Code%201.120%2B-2563eb)
 
+> 📘 **স্টেশন-ওভারভিউ:** এডিটর + সার্ভার দুই স্টেশনের মিলিত ভিত্তি-ডকুমেন্ট দেখো
+> [`doc/STATION-OVERVIEW.md`](doc/STATION-OVERVIEW.md) — সব কম্পোনেন্ট, MCP টুল, ক্লোন-রান, VSIX বিল্ড ও প্রমাণ সহ।
+
 > **Where code and conversation meet** — connect GitHub Copilot Chat to your own local
 > 7-agent LLM server over HTTP / SSE / WebSocket / **UDS** (Unix domain socket on
 > Linux/macOS, **named pipe on Windows**) with tool-call repair, safe context
