@@ -1,22 +1,22 @@
-# 🧟 ZombieCoder — Mission Barisal · সম্পূর্ণ স্টেশন
+# 🧟 ZombieCoder — Mission Barisal · Extension + Server
 
-**দুটো সম্পূর্ণ আলাদা ফোল্ডার — একটি স্টেশন।**
+**দুটো সম্পূর্ণ আলাদা ফোল্ডার — একটি প্রকল্প।**
 
 ```
-C:\Users\sahon\zombiecoder-station\
+C:\Users\sahon\zombiecoder-extension-server\
 │
-├── README.md                  ← এই ফাইল (মাস্টার ডকুমেন্ট)
+├── README.md                          ← এই ফাইল (মাস্টার ডকুমেন্ট)
 │
-├── zombiecoder-editor\        ← 🅰️ এডিটর স্টেশন (VS Code এক্সটেনশন)
+├── zombiecoder-editor\                ← 🅰️ VS Code Extension (এডিটর)
 │      package.json · src\ · doc\ · tests · out-build · VSIX
 │
-└── zombiecoder-server\        ← 🅱️ সার্ভার স্টেশন (গেটওয়ে + MCP)
+└── zombiecoder-server\                ← 🅱️ গেটওয়ে সার্ভার
        api.js · provider\ · agent\ · external mcp\ · tools\ · tests\
 ```
 
-> **মূলনীতি:** এডিটর আর সার্ভার কখনো এক ফোল্ডারে মেশানো হয় না — এডিটর VS Code-এ চলে,
+> **মূলনীতি:** Extension আর সার্ভার কখনো এক ফোল্ডারে মেশানো হয় না — Extension VS Code-এ চলে,
 > সার্ভার আলাদা Node.js প্রসেসে। চাইলে দুটো আলাদা মেশিনেও চলতে পারে
-> (সার্ভার Linux VPS-এ, এডিটর ডেস্কটপ VS Code-এ)। প্রতিটি ফোল্ডারের ভেতরে
+> (সার্ভার Linux VPS-এ, Extension ডেস্কটপ VS Code-এ)। প্রতিটি ফোল্ডারের ভেতরে
 > তার নিজস্ব ডকুমেন্টেশন আছে (নিচে তালিকা দেওয়া হলো), আর এই ফাইলটি দুইয়ের
 > **মিলিত ভিত্তি-ডকুমেন্ট** — ক্লোন-ও-রান, VSIX বিল্ড, ধারাবাহিক প্রমাণ এবং
 > সার্ভারের প্রতিটি কম্পোনেন্ট/টুল/MCP-এর তালিকা।
@@ -25,7 +25,7 @@ C:\Users\sahon\zombiecoder-station\
 
 ## 📌 ১. দ্রুত তালিকা — কী কোথায়
 
-| জিনিস | এডিটর স্টেশন | সার্ভার স্টেশন |
+| জিনিস | Extension (এডিটর) | সার্ভার |
 |---|---|---|
 | ফোল্ডার | `zombiecoder-editor/` | `zombiecoder-server/` |
 | মূল এন্ট্রি | `src/extension.ts` (TS → esbuild `out/extension.js`) | `api.js` (স্টার্ট: `start.js`) |
@@ -37,7 +37,7 @@ C:\Users\sahon\zombiecoder-station\
 
 ---
 
-## 🅰️ ২. ZombieCoder Editor — VS Code এক্সটেনশন স্টেশন
+## 🅰️ ২. ZombieCoder — VS Code Extension
 
 ### ২.১ কী কী
 VS Code-এর `contributes.languageModelChatProviders` কন্ট্রাক্ট অনুযায়ী পরিচালিত
@@ -79,7 +79,7 @@ npm run package          # = vsce package --no-yarn
 code --install-extension zombiecoder-mission-barisal-1.7.1.vsix
 ```
 
-### ২.৪ ধারাবাহিক প্রমাণ — এডিটর (সম্প্রতি যাচাইকৃত)
+### ২.৪ ধারাবাহিক প্রমাণ — Extension (সম্প্রতি যাচাইকৃত)
 | ধাপ | কমান্ড | ফলাফল |
 |---|---|---|
 | 1 | `npm run test-build` | ✅ `out-test` রিজেনারেট (ক্রস-প্ল্যাটফর্ম `rmSync`, POSIX `rm -rf` না) |
@@ -90,7 +90,7 @@ code --install-extension zombiecoder-mission-barisal-1.7.1.vsix
 | 6 | `npm run package` | ✅ VSIX তৈরি + `managementCommand` manifest-এ validated |
 | 7 | ট্রান্সপোর্ট টেস্ট | ✅ Windows named pipe + Linux UDS — দুটোই platform-aware ইউনিট টেস্ট |
 
-### ২.৫ এডিটরের নিজস্ব ডকুমেন্টেশন (`doc\`)
+### ২.৫ এক্সটেনশনের নিজস্ব ডকুমেন্টেশন (`doc\`)
 `usage/install.md` · `usage/configuration.md` · `usage/commands.md` ·
 `architecture/overview.md` · `architecture/provider-chain.md` · `architecture/server-contract.md` ·
 `architecture/transports.md` · `development/build.md` · `development/testing.md` ·
@@ -99,7 +99,7 @@ code --install-extension zombiecoder-mission-barisal-1.7.1.vsix
 
 ---
 
-## 🅱️ ৩. ZombieCoder Server — Mission Barisal গেটওয়ে স্টেশন
+## 🅱️ ৩. ZombieCoder Server — Mission Barisal গেটওয়ে
 
 ### ৩.১ কী কী
 Zero-dependency Node.js সার্ভার — **evidence meets conversation**। MCP-তে কথা বলে
@@ -201,7 +201,7 @@ ollama (লোকাল, priority 9) → opencode → groq → gemini → cloudf
 
 *লাইভ টগল: অ্যাডমিনে কোনো টুল off করলে `tools/list` থেকে বাদ + `tools/call` চোক-পয়েন্টে ব্লক।*
 
-### ৩.৭ এক্সটার্নাল MCP সার্ভার (লোকাল, `external mcp/` — git-ignored, স্টেশনে আছে)
+### ৩.৭ এক্সটার্নাল MCP সার্ভার (লোকাল, `external mcp/` — git-ignored, প্রকল্পে আছে)
 | সার্ভার | ফাইল | পোর্ট | টুল/ভূমিকা |
 |---|---|---|---|
 | OCR | `ocr-mcp.js` | **3100** | `ocr_image` · `ocr_screenshot` · `ocr_crop` (Tesseract, বাংলা+ইংরেজি) |
@@ -249,7 +249,7 @@ ANTIDOTE_ENABLED · MAX_TOOL_ROUNDS` — সম্পূর্ণ তালি�
 ---
 
 ## 🔗 ৪. রিমোট রিপোজিটরি (push করা হয়েছে ✅)
-| ফোল্ডার | রিমোট | main commit |
+| ফোল্ডার | রিমোট | status |
 |---|---|---|
 | `zombiecoder-editor` | `https://github.com/sahonsrabon-os/zombiecoder-editor.git` | ✅ pushed, branch `main` (136 ফাইল, TypeScript) |
 | `zombiecoder-server` | `https://github.com/sahonsrabon-os/zombie-bazaar.git` | ✅ pushed, branch `main` (57 ফাইল, JavaScript) |
@@ -259,6 +259,6 @@ ANTIDOTE_ENABLED · MAX_TOOL_ROUNDS` — সম্পূর্ণ তালি�
 ## 📜 ৫. ক্রেডিট
 **Sahon Srabon · Developer Zone · Dhaka, Bangladesh** — `infi@zombiecoder.my.id`
 আর্কিটেক্ট: **Monu — The Builder** (Mission Barisal persona)।
-এডিটর LICENSE: `github-copilot-llm-gateway by arbs-io` (লিগ্যাল ক্রেডিট — ব্র্যান্ডিং নয়)।
+Extension LICENSE: `github-copilot-llm-gateway by arbs-io` (লিগ্যাল ক্রেডিট — ব্র্যান্ডিং নয়)।
 
-*জেনারেটেড: 2026-10-09 · স্টেশন ভার্সন 1 — editor 1.7.1 + server 3.2.1*
+*জেনারেটেড: 2026-10-11 · প্রকল্প ভার্সন 1 — Extension 1.7.1 + Server 3.2.1*
